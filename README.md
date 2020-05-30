@@ -1,1 +1,1 @@
-"# UPS_lab" 
+Skrypty Pythona na UPSy

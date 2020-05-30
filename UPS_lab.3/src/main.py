@@ -44,6 +44,8 @@ def write_sound_files():
     file = sf.SoundFile("gd_echo.wav", mode='x', samplerate=44100, channels=2)
     file.write(out_file)
 
+
+
 if __name__ == '__main__':
     '''
     for i in range(buffersize):

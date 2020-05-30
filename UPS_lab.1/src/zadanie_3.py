@@ -1,0 +1,1 @@
+#próbkowanie powinno byæ 2x wiêksze od czêstotliwoœci

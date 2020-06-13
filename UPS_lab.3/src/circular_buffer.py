@@ -1,17 +1,10 @@
 class CircularBuffer(object):
-    '''
-    classdocs
-    '''
     buffer = []
     write = 0
     read = 0
     N = 0
 
-
     def __init__(self, N):
-        '''
-        Constructor
-        '''
         for i in range(N):
             self.buffer.append([0,0])
         self.N = N

@@ -68,15 +68,7 @@ def IIR4th(fs, fc):
     return [a, b]
 
 def sinc_filter(fs, fc, N):
-    '''
-    Funkcja wyliczająca współczynniki filtru SOI.
-    Parametry wejściowe:
-      - fs - częstotliwość próbkowania
-      - fc - częstotliwość odcięcia filtru
-      - N  - długość odpowiedzi filtru NOI  
-    Zwracany wynik:
-      - tablica zawierająca współczynniki b filtru SOI
-    '''
+
     i = 0
     h = (N-1) >> 1
     f0 = fc / fs
@@ -99,66 +91,26 @@ def sinc_filter(fs, fc, N):
     return b
 
 def FIR(bufor_we, recent_pos, b):
-    '''
-    Funkcja realizująca filtrację SOI w czasie rzeczywistym. Funkcja ta jest 
-    do zaimplementowania w zadaniu nr 2. Parametry wejściowe:
-      - bufor we - bufor danych zawierający dane do przefiltrowania
-      - recent_pos - indeks bieżącej próbki w buforze wejściowym, którą należy
-        przetworzyć
-      - b - współczynniki filtru SOI
-    Zwracany wynik:
-      - wynik przetwarzania bieżącej próbki w formacie gotowym do przekazania 
-        do karty dźwiękowej
-      
-    UWAGA: 
-      Wszelkie operacje wykonane na buforze wejściowym w będą widoczne poza 
-      funkcją.
-    '''
-    return [0, 0]
+
+    temp = [0,0]
+    for x in range(len(b)):
+        temp[0] = temp[0] + ((bufor_we[(recent_pos - x)][0]) * b[x&(len(b)-1)])
+        #print(bufor_we[(recent_pos - x)][0])
+    temp[1] = temp[0]
+    return temp
 
 def IIR(bufor_we, bufor_wy, recent_pos, y_pos, a, b):
-    '''
-    Funkcja realizująca filtrację NOI w czasie rzeczywistym. Funkcja ta jest 
-    do zaimplementowania w zadaniu nr 3. Parametry wejściowe:
-      - bufor we - bufor danych zawierający dane do przefiltrowania
-      - bufor wy - bufor danych zawierający dane przefiltrowane
-      - recent_pos - indeks bieżącej próbki w buforze wejściowym, którą należy
-        przetworzyć
-      - y_pos - indeks bieżącej próbki w buforze wyjściowym
-        UWAGA: w obecnym laboratorium przyjęto, że bufor wejściowy ma tą samą 
-        wielkość, co bufor wyjściowy. W ogólności te dwie wielkości mogą być 
-        różne
-      - a / b - współczynniki filtru NOI
-      
-    Zwracany wynik:
-      - wynik przetwarzania bieżącej próbki w formacie gotowym do przekazania 
-        do karty dźwiękowej
-      
-    UWAGA: 
-      Wszelkie operacje wykonane na buforze wejściowym i wyjściowym w będą 
-      widoczne poza funkcją.
-    '''
-    return [0, 0]
+
+    temp = [0, 0]
+    for x in range(len(a)):
+        temp[0] = temp[0] + ((bufor_we[(recent_pos - x)][0]) * a[x & (len(a) - 1)])
+    for x in range(len(b)):
+        temp[0] = temp[0] - ((bufor_wy[(recent_pos - x)][0]) * b[x & (len(b) - 1)])
+    temp[1] = temp[0]
+    return temp
 
 def echo(bufor, element, recent_pos, echo_num):
-    '''
-    Funkcja realizująca echo. Funkcja ta jest do zaimplementowania 
-    w zadaniu nr 1. 
-    Parametry wejściowe:
-      - bufor - bufor zawierający przetworzone próbki echa
-      - element - bieżący element do przetworzenia i do wstawienia do tablicy danych przetworzonych
-      - recent_pos - indeks bieżącej pozycji do zapisania w buforze
-      - echo_num - wielkość "przesunięcia" echa
-    Zwracany wynik:
-      - wynik przetwarzania bieżącej próbki w formacie gotowym do przekazania 
-        do karty dźwiękowej.
-    UWAGA: 
-      - lewy kanał (kanał o indeksie 0) nie powinien być poddawany modyfikacji!
-      - prawy kanał (kanał o indeksie 1) powinien zawierać wynik działania funkcji echo
-    
-    UWAGA: 
-      Wszelkie operacje wykonane na buforze wejściowym w będą widoczne poza 
-      funkcją.
-      
-    '''
+
+    element[0] = element[0]
+    element[1] = (bufor[recent_pos-echo_num][1]*0.2 + element[1] *0.8)
     return element
